@@ -55,14 +55,46 @@ hands.onResults((results) => {
 });
 
 // --- ส่วนที่ 4: การเปิดใช้งานกล้อง ---
-const camera = new Camera(videoElement, {
-  onFrame: async () => {
-    // ส่งเฟรมภาพจากวิดีโอไปให้ AI ประมวลผล
-    await hands.send({ image: videoElement });
-  },
-  facingMode: "user", // ใช้กล้องหน้า (เหมาะสำหรับมือถือ)
-  width: width,
-  height: height,
-});
+// --- ส่วนที่ 4: การจัดการกล้องและการสลับกล้อง ---
+let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
 
-camera.start();
+// ฟังก์ชันสำหรับสร้างและเริ่มกล้อง
+function startNewCamera(mode) {
+  const camera = new Camera(videoElement, {
+    onFrame: async () => {
+      await hands.send({ image: videoElement });
+    },
+    facingMode: mode,
+    width: width,
+    height: height,
+  });
+  camera.start();
+  return camera;
+}
+
+// เริ่มรันกล้องครั้งแรก
+let activeCamera = startNewCamera(currentFacingMode);
+
+// ตั้งค่าปุ่มสลับกล้อง
+const switchBtn = document.getElementById("switch-camera-btn");
+switchBtn.addEventListener("click", () => {
+  // สลับโหมด
+  currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+
+  // สั่งหยุดกล้องตัวเดิมก่อน
+  activeCamera.stop();
+
+  // จัดการเรื่องการ Mirror (กลับด้าน) ภาพ
+  if (currentFacingMode === "environment") {
+    videoElement.style.transform = "scaleX(1)"; // กล้องหลังไม่ต้องกลับด้าน
+    canvasElement.style.transform = "scaleX(1)";
+  } else {
+    videoElement.style.transform = "scaleX(-1)"; // กล้องหน้ากลับด้านเหมือนกระจก
+    canvasElement.style.transform = "scaleX(-1)";
+  }
+
+  // เริ่มกล้องใหม่ในโหมดที่เลือก
+  activeCamera = startNewCamera(currentFacingMode);
+
+  console.log("สลับไปใช้โหมด: " + currentFacingMode);
+});
