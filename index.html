@@ -12,9 +12,15 @@
             <canvas id="output_canvas"></canvas>
 
             <div class="ui-layer">
-                <div id="gesture-output">L: กำลังหา...<br />R: กำลังหา...</div>
+                <div id="gesture-output">L: Waiting...<br />R: Waiting...</div>
+                <div id="gesture-log-container">
+                    <strong style="color: #ffeb3b">History Log:</strong>
+                    <div id="log-list"></div>
+                </div>
+
+                <button id="download-log-btn">Download Log</button>
+
                 <button id="switch-camera-btn">Switch Camera</button>
-                <p id="status">ระบบพร้อมทำงาน</p>
             </div>
         </div>
 
