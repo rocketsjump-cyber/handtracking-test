@@ -17,8 +17,27 @@
                 <p id="status">กำลังรอการเชื่อมต่อกล้อง...</p>
             </div>
         </div>
-        <div class="ui-overlay">
-            <button id="switch-camera-btn">switch</button>
+        <div
+            class="ui-overlay"
+            style="position: fixed; top: 20px; left: 20px; z-index: 1000"
+        >
+            <div
+                id="gesture-output"
+                style="
+                    color: #00ff00;
+                    font-size: 28px;
+                    font-weight: bold;
+                    text-shadow: 2px 2px #000;
+                "
+            >
+                Gesture: Waiting...
+            </div>
+            <button
+                id="switch-camera-btn"
+                style="margin-top: 10px; padding: 10px 20px; cursor: pointer"
+            >
+                Switch Camera
+            </button>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>

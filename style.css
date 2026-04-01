@@ -47,15 +47,35 @@ body {
     pointer-events: none;
 }
 #switch-camera-btn {
-    cursor: pointer !important;
-    position: relative;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
     z-index: 9999;
+
+    cursor: pointer !important;
     pointer-events: auto;
 
-    background-color: #007bff;
+    background-color: #2196f3;
     color: white;
-    padding: 15px 25px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#switch-camera-btn:hover {
+    background-color: #1976d2;
+    transform: scale(1.05);
+}
+
+#gesture-output {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
 }
