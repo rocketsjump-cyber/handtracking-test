@@ -54,11 +54,11 @@ hands.onResults((results) => {
   canvasCtx.restore();
 });
 
-// --- ส่วนที่ 4: การเปิดใช้งานกล้อง ---
 // --- ส่วนที่ 4: การจัดการกล้องและการสลับกล้อง ---
-let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
+let currentFacingMode = "user";
+let activeCamera = null;
 
-// ฟังก์ชันสำหรับสร้างและเริ่มกล้อง
+// ฟังก์ชันสร้างกล้องใหม่
 function startNewCamera(mode) {
   const camera = new Camera(videoElement, {
     onFrame: async () => {
@@ -72,29 +72,35 @@ function startNewCamera(mode) {
   return camera;
 }
 
-// เริ่มรันกล้องครั้งแรก
-let activeCamera = startNewCamera(currentFacingMode);
+// สั่งรันกล้องครั้งแรกเมื่อโหลดหน้าเว็บ
+activeCamera = startNewCamera(currentFacingMode);
 
-// ตั้งค่าปุ่มสลับกล้อง
-const switchBtn = document.getElementById("switch-camera-btn");
-switchBtn.addEventListener("click", () => {
-  // สลับโหมด
-  currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+// รอให้หน้าเว็บโหลดเสร็จก่อนค่อยเริ่มทำงานกับปุ่ม
+window.addEventListener("DOMContentLoaded", () => {
+  const switchBtn = document.getElementById("switch-camera-btn");
 
-  // สั่งหยุดกล้องตัวเดิมก่อน
-  activeCamera.stop();
+  if (switchBtn) {
+    switchBtn.addEventListener("click", async () => {
+      // 1. สลับโหมด
+      currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
 
-  // จัดการเรื่องการ Mirror (กลับด้าน) ภาพ
-  if (currentFacingMode === "environment") {
-    videoElement.style.transform = "scaleX(1)"; // กล้องหลังไม่ต้องกลับด้าน
-    canvasElement.style.transform = "scaleX(1)";
+      // 2. หยุดกล้องตัวเดิม
+      if (activeCamera) {
+        await activeCamera.stop();
+      }
+
+      // 3. ปรับ Mirror (กลับด้าน) ให้เหมาะสม
+      // กล้องหน้า (user) = กลับด้าน (-1), กล้องหลัง (environment) = ปกติ (1)
+      const scaleValue = currentFacingMode === "user" ? -1 : 1;
+      videoElement.style.transform = `scaleX(${scaleValue})`;
+      canvasElement.style.transform = `scaleX(${scaleValue})`;
+
+      // 4. เริ่มกล้องใหม่
+      activeCamera = startNewCamera(currentFacingMode);
+
+      console.log("Switched to: " + currentFacingMode);
+    });
   } else {
-    videoElement.style.transform = "scaleX(-1)"; // กล้องหน้ากลับด้านเหมือนกระจก
-    canvasElement.style.transform = "scaleX(-1)";
+    console.error("หาปุ่ม switch-camera-btn ไม่เจอ!");
   }
-
-  // เริ่มกล้องใหม่ในโหมดที่เลือก
-  activeCamera = startNewCamera(currentFacingMode);
-
-  console.log("สลับไปใช้โหมด: " + currentFacingMode);
 });

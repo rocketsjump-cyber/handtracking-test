@@ -50,3 +50,17 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
     pointer-events: none; /* เพื่อให้เรายังคงคลิกผ่าน UI ไปหา Canvas ได้ */
 }
+#switch-camera-btn {
+    cursor: pointer !important; /* บังคับให้เป็นนิ้วจิ้ม */
+    position: relative; /* ให้ปุ่มมีตัวตนชัดเจน */
+    z-index: 9999; /* ดันให้ปุ่มอยู่หน้าสุด ห้ามอะไรมาทับ */
+    pointer-events: auto; /* ยืนยันว่าปุ่มนี้รับการคลิกและเมาส์ชี้ได้ */
+
+    /* สไตล์เพิ่มเติมเพื่อให้เห็นชัดว่าปุ่มเปลี่ยนแล้ว */
+    background-color: #007bff;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+}
